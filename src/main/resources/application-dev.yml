@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/book_social_network # URL de la base de données PostgreSQL (localhost:5432)
+    username: username
+    password: password
+    driver-class-name: org.postgresql.Driver # classe du driver JDBC PostgreSQL (org.postgresql.Driver)
+  jpa:
+    hibernate:
+      ddl-auto: update  # stratégie de mise à jour de la base de données (update)
+    show-sql: false # affichage des requêtes SQL générées par Hibernate (false)
+    properties:
+      hibernate:
+        format_sql: true # formatage des requêtes SQL générées par Hibernate (true)
+    database: postgresql # type de base de données (postgresql)
+    database-platform: org.hibernate.dialect.PostgreSQLDialect # dialecte Hibernate pour PostgreSQL
+  mail: # configuration de l'envoi de mails (SMTP)
+    host: localhost
+    port: 1025
+    username: username
+    password: password
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+        auth: true
+        starttls:
+          enable: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+
+

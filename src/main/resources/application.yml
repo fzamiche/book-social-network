@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-request-size: 50MB # taille max d'un fichier uploadé (50MB)
+
+springdoc:
+  default-consumes-media-type: application/json # type de contenu par défaut pour les requêtes POST et PUT
+
+server:
+  servlet:
+    context-path: /api/v1/ # chemin de base de l'API REST (URL de base)
