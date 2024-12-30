@@ -1,10 +1,12 @@
 package com.fzamiche.back_book_social_network.user;
 
+import com.fzamiche.back_book_social_network.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Principal;
@@ -12,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter @Setter @Builder @AllArgsConstructor @NoArgsConstructor
 @Entity
@@ -31,7 +34,8 @@ public class User implements UserDetails, Principal {
     private boolean accountLocked;
     private boolean enabled;
 
-    //private List<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER) // pour charger les rôles de l'utilisateur en même temps que l'utilisateur
+    private List<Role> roles;
 
 
     @CreatedDate    // pour que Spring Data JPA initialise la propriété avec la date et l'heure actuelles lors de la création de l'entité
@@ -47,9 +51,15 @@ public class User implements UserDetails, Principal {
         return email;
     }
 
+    /**
+     * Retourne les rôles de l'utilisateur sous forme d'autorisations.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return this.roles
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
     }
 
     @Override
