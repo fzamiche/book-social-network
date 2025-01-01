@@ -30,7 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if(request.getServletPath().contains("/api/v1/auth")){
+        if(request.getServletPath().contains("/api/v1/auth")){ // pourquoi ? car on ne veut pas vérifier le token JWT pour les requêtes d'authentification
             filterChain.doFilter(request, response);
         }
         final String authHeader = request.getHeader("Authorization");
@@ -41,7 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         jwtToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwtToken);
-        if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){    // si l'utilisateur n'est pas déjà authentifié et que le token est valide alors on l'authentifie
+        if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){    // si l'utilisateur n'est pas déjà authentifié et que le token est valide alors on l'authentifie, sinon on passe au filtre suivant
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
             if(jwtService.isTokenValid(jwtToken, userDetails)){ // si le token est valide alors on authentifie l'utilisateur
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
