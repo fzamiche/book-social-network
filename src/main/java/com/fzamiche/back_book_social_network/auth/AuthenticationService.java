@@ -1,13 +1,17 @@
 package com.fzamiche.back_book_social_network.auth;
 
+import com.fzamiche.back_book_social_network.email.EmailService;
+import com.fzamiche.back_book_social_network.email.EmailTemplateName;
 import com.fzamiche.back_book_social_network.role.Role;
 import com.fzamiche.back_book_social_network.role.RoleRepository;
 import com.fzamiche.back_book_social_network.user.Token;
 import com.fzamiche.back_book_social_network.user.TokenRepository;
 import com.fzamiche.back_book_social_network.user.User;
 import com.fzamiche.back_book_social_network.user.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +26,13 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final TokenRepository tokenRespositoty;
+    private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
-    public void register(RegistrationRequest request) {
+    @Value("${application.mailing.frontend.activation-url}")
+    private String acttivationUrl;
+
+    public void register(RegistrationRequest request) throws MessagingException {
 
         var userRole = roleRepository.findByName("USER")
                 // todo - gérer les exceptions de manière plus propre
@@ -49,11 +57,19 @@ public class AuthenticationService {
         return user;
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
         // generer un token d'activation (code de 6 chiffres) et l'enregistrer en base
         var newToken = generateAndSaveActivationToken(user);
+
         // envoyer un email avec le token
-        // todo - envoyer un email
+        emailService.sendEmail(
+                user.getEmail(),
+                user.getFirstname(),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                acttivationUrl,
+                newToken,
+                "Activation de votre compte"
+        );
     }
 
     private String generateAndSaveActivationToken(User user) {
@@ -62,7 +78,7 @@ public class AuthenticationService {
         var token = createToken(user, generatedToken);
 
         // enregistrer le token en base
-        tokenRespositoty.save(token);
+        tokenRepository.save(token);
         return generatedToken;
     }
 
