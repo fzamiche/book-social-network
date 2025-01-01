@@ -42,7 +42,7 @@ public class EmailService {
             templateName = emailTemplate.name();
         }
 
-        // Creation du MimeMessage pour representer un message email  et MimeMessageHelper pour faciliter la creation du message
+        // Creation du MimeMessage pour representer un message email et MimeMessageHelper pour faciliter la creation du message
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(
                 mimeMessage,

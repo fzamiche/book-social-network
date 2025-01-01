@@ -32,12 +32,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if(request.getServletPath().contains("/api/v1/auth")){ // pourquoi ? car on ne veut pas vérifier le token JWT pour les requêtes d'authentification
             filterChain.doFilter(request, response);
+            return;
         }
         final String authHeader = request.getHeader("Authorization");
         final String jwtToken;
         final String userEmail;
         if(authHeader == null || !authHeader.startsWith("Bearer ")){ // si le header Authorization n'existe pas ou ne commence pas par "Bearer " alors on passe au filtre suivant
             filterChain.doFilter(request, response);
+            return;
         }
         jwtToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwtToken);
