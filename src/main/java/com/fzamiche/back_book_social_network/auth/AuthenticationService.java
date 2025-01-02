@@ -1,17 +1,19 @@
 package com.fzamiche.back_book_social_network.auth;
 
+import com.fzamiche.back_book_social_network.auth.model.AuthenticationRequest;
+import com.fzamiche.back_book_social_network.auth.model.AuthenticationResponse;
+import com.fzamiche.back_book_social_network.auth.model.RegistrationRequest;
 import com.fzamiche.back_book_social_network.email.EmailService;
 import com.fzamiche.back_book_social_network.email.EmailTemplateName;
 import com.fzamiche.back_book_social_network.role.Role;
 import com.fzamiche.back_book_social_network.role.RoleRepository;
 import com.fzamiche.back_book_social_network.security.JwtService;
-import com.fzamiche.back_book_social_network.user.Token;
-import com.fzamiche.back_book_social_network.user.TokenRepository;
+import com.fzamiche.back_book_social_network.user.token.Token;
+import com.fzamiche.back_book_social_network.user.token.TokenRepository;
 import com.fzamiche.back_book_social_network.user.User;
 import com.fzamiche.back_book_social_network.user.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +57,7 @@ public class AuthenticationService {
     }
 
     private User createUser(RegistrationRequest request, Role userRole) {
-        var user = User.builder()
+        return User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
@@ -64,7 +66,6 @@ public class AuthenticationService {
                 .enabled(false)
                 .roles(List.of(userRole))
                 .build();
-        return user;
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
@@ -93,13 +94,12 @@ public class AuthenticationService {
     }
 
     private static Token createToken(User user, String generatedToken) {
-        var token = Token.builder()
+        return Token.builder()
                 .token(generatedToken)
                 .createdAt(LocalDateTime.now())
                 .expriredAt(LocalDateTime.now().plusMinutes(15))
                 .user(user)
                 .build();
-        return token;
     }
 
     private String generateActivationToken(int lengthDigits) {

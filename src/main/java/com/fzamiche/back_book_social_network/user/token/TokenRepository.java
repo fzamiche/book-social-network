@@ -1,4 +1,4 @@
-package com.fzamiche.back_book_social_network.user;
+package com.fzamiche.back_book_social_network.user.token;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,5 +1,8 @@
 package com.fzamiche.back_book_social_network.auth;
 
+import com.fzamiche.back_book_social_network.auth.model.AuthenticationRequest;
+import com.fzamiche.back_book_social_network.auth.model.AuthenticationResponse;
+import com.fzamiche.back_book_social_network.auth.model.RegistrationRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;

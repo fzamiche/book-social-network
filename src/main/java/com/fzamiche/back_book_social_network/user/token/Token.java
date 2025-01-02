@@ -1,8 +1,8 @@
-package com.fzamiche.back_book_social_network.user;
+package com.fzamiche.back_book_social_network.user.token;
 
+import com.fzamiche.back_book_social_network.user.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +23,6 @@ public class Token {
     private LocalDateTime validatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
