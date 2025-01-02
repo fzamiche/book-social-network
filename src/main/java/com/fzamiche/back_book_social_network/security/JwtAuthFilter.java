@@ -30,7 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if(request.getServletPath().contains("/api/v1/auth")){ // pourquoi ? car on ne veut pas vérifier le token JWT pour les requêtes d'authentification
+        if(request.getServletPath().contains("/api/v1/auth")){ // pourquoi ? car on ne veut pas vérifier le token JWT pour les requêtes de registration
             filterChain.doFilter(request, response);
             return;
         }
