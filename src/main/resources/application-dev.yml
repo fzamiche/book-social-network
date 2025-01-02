@@ -44,7 +44,7 @@ server:
 
 logging:
   level:
-    org:
-      springframework:
-        security: DEBUG
-
+    org.springframework.security: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+    org.springframework.security.web.SecurityFilterChain: DEBUG
+    org.springframework.security.web.access: DEBUG
