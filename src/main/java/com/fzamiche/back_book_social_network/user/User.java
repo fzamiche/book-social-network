@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Getter @Setter @Builder @AllArgsConstructor @NoArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "_user")
 @EntityListeners(AuditingEntityListener.class)  //Capturer les événements de cycle de vie de l'entité JPA et les déléguer à des auditeurs
 public class User implements UserDetails, Principal {
 
@@ -92,7 +92,7 @@ public class User implements UserDetails, Principal {
         return enabled;
     }
 
-    private String getFullName() {
+    public String getFullName() {
         return firstname + " " + lastname;
     }
 }

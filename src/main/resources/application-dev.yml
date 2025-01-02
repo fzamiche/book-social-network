@@ -35,4 +35,16 @@ application:
     jwt:
       secret-key: 278950ececc07b77ba386d4033f78f2c52867ce3af9ebc2fe7c482da9589e2c243433965f4249808f1425e8334bb92499b47666ee5d0aa8494137bd6774e7ab7 # clé secrète pour la génération des tokens JWT
       expiration: 86400000
+  mailing:
+    frontend:
+      activation-url : http://localhost:4200/activate-account
 
+server:
+  port: 8088
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+    org.springframework.security.web.SecurityFilterChain: DEBUG
+    org.springframework.security.web.access: DEBUG
