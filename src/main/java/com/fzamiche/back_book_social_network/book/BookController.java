@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("books")
 @RequiredArgsConstructor
@@ -21,28 +19,27 @@ public class BookController {
     @PostMapping
     public ResponseEntity<Integer> saveBook(
             @Valid @RequestBody BookRequest request,
-            Authentication connectedUser)
-    {
+            Authentication connectedUser) {
         return ResponseEntity.ok(bookService.save(request, connectedUser));
     }
 
     @GetMapping("{book-id}")
     public ResponseEntity<BookResponse> findBookById(
-            @PathVariable("book-id") Integer bookId)
-    {
+            @PathVariable("book-id") Integer bookId) {
 
         return ResponseEntity.ok(bookService.findById(bookId));
     }
 
     /**
      * Récupérer la liste des livres paginée, non archivé, partageable, excepté ceux de l'utilisateur connecté
-     * @param page : la page à récupérer (0 par défaut)
-     * @param size : la taille de la page (10 par défaut)
-     * @param connectedUser : l'utilisateur connecté (pour ne pas récupérer ses livres)
      *
-     * En utilisant la pagination, on peut récupérer les livres par page et par taille de page
-     * Cela permet de ne pas surcharger la mémoire de l'application
-     * Exemple : si on a 1000 livres, on peut les récupérer par 10, 20 ... livres par page
+     * @param page          : la page à récupérer (0 par défaut)
+     * @param size          : la taille de la page (10 par défaut)
+     * @param connectedUser : l'utilisateur connecté (pour ne pas récupérer ses livres)
+     *                      <p>
+     *                      En utilisant la pagination, on peut récupérer les livres par page et par taille de page
+     *                      Cela permet de ne pas surcharger la mémoire de l'application
+     *                      Exemple : si on a 1000 livres, on peut les récupérer par 10, 20 ... livres par page
      * @return la liste des livres paginée
      */
     @GetMapping
@@ -50,9 +47,17 @@ public class BookController {
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
-    )
-    {
+    ) {
         return ResponseEntity.ok(bookService.findAllBooks(page, size, connectedUser));
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity<PageResponse<BookResponse>> findAllBooksByOwner(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.findAllBooksByOwner(page, size, connectedUser));
     }
 
 }
