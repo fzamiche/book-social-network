@@ -1,5 +1,6 @@
 package com.fzamiche.back_book_social_network.feedBack;
 
+import com.fzamiche.back_book_social_network.book.Book;
 import com.fzamiche.back_book_social_network.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,4 +21,8 @@ public class FeedBack extends BaseEntity {
 
     private Double note;
     private String comment;
+
+    @ManyToOne // plusieurs feedbacks peuvent appartenir à un seul livre
+    @JoinColumn(name = "book_id") // la clé étrangère dans la table FeedBack qui fait référence à la clé primaire de la table Book
+    private Book book;
 }
