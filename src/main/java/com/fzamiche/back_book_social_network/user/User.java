@@ -1,5 +1,7 @@
 package com.fzamiche.back_book_social_network.user;
 
+import com.fzamiche.back_book_social_network.book.Book;
+import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
 import com.fzamiche.back_book_social_network.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +38,12 @@ public class User implements UserDetails, Principal {
 
     @ManyToMany(fetch = FetchType.EAGER) // pour charger les rôles de l'utilisateur en même temps que l'utilisateur
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "owner") // un utilisateur peut avoir plusieurs livres, un livre appartient à un seul utilisateur
+    private List<Book> books;
+
+    @OneToMany(mappedBy = "user") // un livre peut avoir plusieurs historiques de transaction, un historique de transaction appartient à un seul livre
+    private List<BookTransactinoHistory> histories;
 
 
     @CreatedDate    // pour que Spring Data JPA initialise la propriété avec la date et l'heure actuelles lors de la création de l'entité
