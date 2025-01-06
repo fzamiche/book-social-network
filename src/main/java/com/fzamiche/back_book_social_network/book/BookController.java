@@ -91,7 +91,7 @@ public class BookController {
 
     @PatchMapping("/archived/{book-id}")
     public ResponseEntity<Integer> updateArchivedStatusBook(
-           @PathVariable("book_id") Integer bookId,
+           @PathVariable("book-id") Integer bookId,
            Authentication connectedUser
     ){
         return ResponseEntity.ok(bookService.updateArchivedStatusBook(bookId, connectedUser));
