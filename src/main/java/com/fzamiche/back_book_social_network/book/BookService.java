@@ -1,6 +1,7 @@
 package com.fzamiche.back_book_social_network.book;
 
 import com.fzamiche.back_book_social_network.common.PageResponse;
+import com.fzamiche.back_book_social_network.exception.OperationNotPermittedException;
 import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
 import com.fzamiche.back_book_social_network.history.BookTransactionHostoryRepository;
 import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.fzamiche.back_book_social_network.book.BookSpecification.withOwnerId;
 
@@ -116,6 +118,18 @@ public class BookService {
                 allReturnedBooks.isFirst(),
                 allReturnedBooks.isLast()
         );
+    }
+
+    public Integer updateShareableStatusBook(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepositiry.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
+        User user = (User) connectedUser.getPrincipal();
+        if(!Objects.equals(book.getOwner().getId(), user.getId())){
+            throw new OperationNotPermittedException("Vous ne pouvez pas mettre à jour le statut shareable du Book : " + bookId);
+        }
+        book.setShareable(!book.isShareable());
+        bookRepositiry.save(book);
+        return bookId;
     }
 }
 
