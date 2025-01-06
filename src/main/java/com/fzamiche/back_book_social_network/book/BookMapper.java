@@ -1,5 +1,6 @@
 package com.fzamiche.back_book_social_network.book;
 
+import com.fzamiche.back_book_social_network.file.FileUtils;
 import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
 import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
 import jakarta.validation.Valid;
@@ -28,8 +29,7 @@ public class BookMapper {
                 .isbn(book.getIsbn())
                 .synopsis(book.getSynopsis())
                 .owner(book.getOwner().getFullName())
-                // todo - implémenter la récupération de l'image du livre
-                //.bookCover(book.getBookCover())
+                .bookCover(FileUtils.readFileFromLocation(book.getBookCover()))
                 .rate(book.getRate())
                 .archived(book.isArchived())
                 .shareable(book.isShareable())
