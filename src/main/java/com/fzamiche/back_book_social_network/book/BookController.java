@@ -91,10 +91,18 @@ public class BookController {
 
     @PatchMapping("/archived/{book-id}")
     public ResponseEntity<Integer> updateArchivedStatusBook(
-           @PathVariable("book-id") Integer bookId,
-           Authentication connectedUser
-    ){
+            @PathVariable("book-id") Integer bookId,
+            Authentication connectedUser
+    ) {
         return ResponseEntity.ok(bookService.updateArchivedStatusBook(bookId, connectedUser));
+    }
+
+    @PostMapping("/borrow/{book-id}")
+    public ResponseEntity<Integer> borrowBook(
+            @PathVariable("book-id") Integer bookId,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.borrowBook(bookId, connectedUser));
     }
 
 }

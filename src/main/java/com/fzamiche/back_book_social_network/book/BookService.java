@@ -143,6 +143,35 @@ public class BookService {
         bookRepositiry.save(book);
         return bookId;
     }
+
+    public Integer borrowBook(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepositiry.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
+
+        // check si Book n'est pas archivé etpartageable
+        if(book.isArchived() || !book.isShareable()){
+            throw new OperationNotPermittedException("Vous ne pouvez pas emprunté le Book : " + bookId + " car archivé/non-partageable.");
+        }
+        User user = (User) connectedUser.getPrincipal();
+
+        //l'utilisateur ne doit pas etre l'Owner du Book
+        if(Objects.equals(book.getOwner().getId(), user.getId())){
+            throw new OperationNotPermittedException("Vous ne pouvez pas malheureusement emprunté votre Book : " + bookId );
+        }
+
+        // check si l'utilisateur n'as pas un emprunt en cours de ce Book
+        final boolean isAlreadyBorrowed = bookTransactionHostoryRepository.isAlreadyBorrowedByUser(bookId, user.getId());
+        if(isAlreadyBorrowed){
+            throw new OperationNotPermittedException("Le Book : " + bookId + "que vous avez demandé est déjà en cours d'emprunt par vous" );
+        }
+        BookTransactinoHistory bookTransactinoHistory = BookTransactinoHistory.builder()
+                .user(user)
+                .book(book)
+                .returned(false)
+                .returnApproved(false)
+                .build();
+        return bookTransactionHostoryRepository.save(bookTransactinoHistory).getId();
+    }
 }
 
 
