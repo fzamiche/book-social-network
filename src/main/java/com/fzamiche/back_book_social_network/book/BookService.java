@@ -189,9 +189,30 @@ public class BookService {
         }
 
         // check si l'utilisateur a emprunté le Book
-        BookTransactinoHistory bookTransactinoHistory = bookTransactionHostoryRepository.findByBookAndUser(bookId, user)
+        BookTransactinoHistory bookTransactinoHistory = bookTransactionHostoryRepository.findByBookIdAndUserId(bookId, user)
                 .orElseThrow(() -> new OperationNotPermittedException("Vous n'avez pas emprunté le Book avec l'ID : " + bookId));
         bookTransactinoHistory.setReturned(true);
+        return bookTransactionHostoryRepository.save(bookTransactinoHistory).getId();
+    }
+
+    public Integer approuveReturnBorrowedBook(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepositiry.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
+
+        // check si Book n'est pas archivé etpartageable
+        if(book.isArchived() || !book.isShareable()){
+            throw new OperationNotPermittedException("Vous ne pouvez pas approuvé le Book : " + bookId + " car archivé/non-partageable.");
+        }
+        User owner = (User) connectedUser.getPrincipal();
+        // l'utilisateur doit être l'Owner du Book
+        if(!Objects.equals(book.getOwner().getId(), owner.getId())){
+            throw new OperationNotPermittedException("Vous ne pouvez pas approuver le retour du Book : " + bookId + " car vous n'êtes pas le propriétaire.");
+        }
+
+        // check si l'utilisateur a retourné le Book
+        BookTransactinoHistory bookTransactinoHistory = bookTransactionHostoryRepository.findByBookIdAndOwnerId(bookId, owner)
+                .orElseThrow(() -> new OperationNotPermittedException("Book avec l'ID : " + bookId + " n'a pas été encore retourné"));
+        bookTransactinoHistory.setReturnApproved(true);
         return bookTransactionHostoryRepository.save(bookTransactinoHistory).getId();
     }
 }
