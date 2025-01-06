@@ -131,6 +131,18 @@ public class BookService {
         bookRepositiry.save(book);
         return bookId;
     }
+
+    public Integer updateArchivedStatusBook(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepositiry.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
+        User user = (User) connectedUser.getPrincipal();
+        if(!Objects.equals(book.getOwner().getId(), user.getId())){
+            throw new OperationNotPermittedException("Vous ne pouvez pas mettre à jour le statut archived du Book : " + bookId);
+        }
+        book.setArchived(!book.isArchived());
+        bookRepositiry.save(book);
+        return bookId;
+    }
 }
 
 
