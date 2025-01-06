@@ -1,6 +1,7 @@
 package com.fzamiche.back_book_social_network.book;
 
 import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
+import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,8 @@ public class BookMapper {
                 .build();
     }
 
-    public BorrowedBookResponse toBorrowedBookResponse(BookTransactinoHistory bookTransactinoHistory) {
-        return BorrowedBookResponse.builder()
+    public BookTransactionHistoryResponse toBookTransactionHistoryResponse(BookTransactinoHistory bookTransactinoHistory) {
+        return BookTransactionHistoryResponse.builder()
                 .id(bookTransactinoHistory.getId())
                 .title(bookTransactinoHistory.getBook().getTitle())
                 .authorName(bookTransactinoHistory.getBook().getAuthorName())

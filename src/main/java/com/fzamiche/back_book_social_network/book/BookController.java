@@ -1,6 +1,7 @@
 package com.fzamiche.back_book_social_network.book;
 
 import com.fzamiche.back_book_social_network.common.PageResponse;
+import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -60,13 +61,24 @@ public class BookController {
         return ResponseEntity.ok(bookService.findAllBooksByOwner(page, size, connectedUser));
     }
 
+    // récupérer les livres paginés, empruntés par l'utilisateur connecté
     @GetMapping("/borrowed")
-    public ResponseEntity<PageResponse<BorrowedBookResponse>> findAllBorrowedBooks(
+    public ResponseEntity<PageResponse<BookTransactionHistoryResponse>> findAllBorrowedBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(bookService.findAllBorrowedBooks(page, size, connectedUser));
+    }
+
+    // récupérer les livres paginés, retournés à l'utilisateur connecté.
+    @GetMapping("/returned")
+    public ResponseEntity<PageResponse<BookTransactionHistoryResponse>> findAllReturnedBooks(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.findAllReturnedBooks(page, size, connectedUser));
     }
 
 }

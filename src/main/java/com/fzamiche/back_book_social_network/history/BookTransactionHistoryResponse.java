@@ -1,4 +1,4 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.history;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BorrowedBookResponse {
+public class BookTransactionHistoryResponse {
 
     private Integer id;
     private String title;

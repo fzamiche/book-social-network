@@ -3,6 +3,7 @@ package com.fzamiche.back_book_social_network.book;
 import com.fzamiche.back_book_social_network.common.PageResponse;
 import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
 import com.fzamiche.back_book_social_network.history.BookTransactionHostoryRepository;
+import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
 import com.fzamiche.back_book_social_network.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -81,12 +82,12 @@ public class BookService {
         );
     }
 
-    public PageResponse<BorrowedBookResponse> findAllBorrowedBooks(int page, int size, Authentication connectedUser) {
+    public PageResponse<BookTransactionHistoryResponse> findAllBorrowedBooks(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<BookTransactinoHistory> allBorrowedBooks = bookTransactionHostoryRepository.findAllBorrowedBooks(pageable, user.getId());
-        List<BorrowedBookResponse> borrowedBookResponses = allBorrowedBooks.stream()
-                .map(bookMapper::toBorrowedBookResponse)
+        List<BookTransactionHistoryResponse> borrowedBookResponses = allBorrowedBooks.stream()
+                .map(bookMapper::toBookTransactionHistoryResponse)
                 .toList();
         return new PageResponse<>(
                 borrowedBookResponses,
@@ -98,4 +99,36 @@ public class BookService {
                 allBorrowedBooks.isLast()
         );
     }
+
+    public PageResponse<BookTransactionHistoryResponse> findAllReturnedBooks(int page, int size, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<BookTransactinoHistory> allReturnedBooks = bookTransactionHostoryRepository.findAllReturnedBooks(pageable, user.getId());
+        List<BookTransactionHistoryResponse> returnedBookResponses = allReturnedBooks.stream()
+                .map(bookMapper::toBookTransactionHistoryResponse)
+                .toList();
+        return new PageResponse<>(
+                returnedBookResponses,
+                allReturnedBooks.getNumber(),
+                allReturnedBooks.getSize(),
+                allReturnedBooks.getTotalElements(),
+                allReturnedBooks.getTotalPages(),
+                allReturnedBooks.isFirst(),
+                allReturnedBooks.isLast()
+        );
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
