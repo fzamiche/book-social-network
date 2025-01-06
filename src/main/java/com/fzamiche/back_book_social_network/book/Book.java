@@ -38,6 +38,21 @@ public class Book extends BaseEntity {
     @OneToMany(mappedBy = "book") // un livre peut avoir plusieurs feedbacks, un feedback appartient à un seul livre
     private List<FeedBack> feedBacks;
 
+    @Transient
+    public double getRate() {
+        if (feedBacks == null || feedBacks.isEmpty()) {
+            return 0;
+        } else {
+            var rate =  feedBacks.stream()
+                    .mapToDouble(FeedBack::getNote)
+                    .average()
+                    .orElse(0);
+            var roundedRate = Math.round(rate * 10.0) / 10.0; // 3.34 -> 3.0 | 3.56 -> 4.0
+            return roundedRate;
+        }
+    }
+
+
     @OneToMany(mappedBy = "book") // un livre peut avoir plusieurs historiques de transaction, un historique de transaction appartient à un seul livre
     private List<BookTransactinoHistory> histories;
 
