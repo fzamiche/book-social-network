@@ -1,7 +1,7 @@
 package com.fzamiche.back_book_social_network.user;
 
-import com.fzamiche.back_book_social_network.book.Book;
-import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
+import com.fzamiche.back_book_social_network.book.model.Book;
+import com.fzamiche.back_book_social_network.history.model.BookTransactinoHistory;
 import com.fzamiche.back_book_social_network.role.Role;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,7 +1,10 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.book.controller;
 
+import com.fzamiche.back_book_social_network.book.dto.BookRequest;
+import com.fzamiche.back_book_social_network.book.dto.BookResponse;
+import com.fzamiche.back_book_social_network.book.service.BookService;
 import com.fzamiche.back_book_social_network.common.PageResponse;
-import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
+import com.fzamiche.back_book_social_network.history.dto.BookTransactionHistoryResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

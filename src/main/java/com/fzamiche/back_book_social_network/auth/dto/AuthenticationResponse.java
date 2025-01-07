@@ -1,4 +1,4 @@
-package com.fzamiche.back_book_social_network.auth.model;
+package com.fzamiche.back_book_social_network.auth.dto;
 
 import lombok.Builder;
 import lombok.Getter;

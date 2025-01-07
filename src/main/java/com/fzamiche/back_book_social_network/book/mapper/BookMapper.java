@@ -1,8 +1,11 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.book.mapper;
 
+import com.fzamiche.back_book_social_network.book.model.Book;
+import com.fzamiche.back_book_social_network.book.dto.BookRequest;
+import com.fzamiche.back_book_social_network.book.dto.BookResponse;
 import com.fzamiche.back_book_social_network.file.FileUtils;
-import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
-import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
+import com.fzamiche.back_book_social_network.history.model.BookTransactinoHistory;
+import com.fzamiche.back_book_social_network.history.dto.BookTransactionHistoryResponse;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 

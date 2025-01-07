@@ -1,4 +1,4 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.book.model;
 
 import org.springframework.data.jpa.domain.Specification;
 

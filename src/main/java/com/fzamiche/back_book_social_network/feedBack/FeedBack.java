@@ -1,6 +1,6 @@
 package com.fzamiche.back_book_social_network.feedBack;
 
-import com.fzamiche.back_book_social_network.book.Book;
+import com.fzamiche.back_book_social_network.book.model.Book;
 import com.fzamiche.back_book_social_network.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

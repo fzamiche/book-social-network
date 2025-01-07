@@ -1,8 +1,8 @@
 package com.fzamiche.back_book_social_network.auth;
 
-import com.fzamiche.back_book_social_network.auth.model.AuthenticationRequest;
-import com.fzamiche.back_book_social_network.auth.model.AuthenticationResponse;
-import com.fzamiche.back_book_social_network.auth.model.RegistrationRequest;
+import com.fzamiche.back_book_social_network.auth.dto.AuthenticationRequest;
+import com.fzamiche.back_book_social_network.auth.dto.AuthenticationResponse;
+import com.fzamiche.back_book_social_network.auth.dto.RegistrationRequest;
 import com.fzamiche.back_book_social_network.email.EmailService;
 import com.fzamiche.back_book_social_network.email.EmailTemplateName;
 import com.fzamiche.back_book_social_network.role.Role;

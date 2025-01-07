@@ -1,11 +1,16 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.book.service;
 
+import com.fzamiche.back_book_social_network.book.dto.BookRequest;
+import com.fzamiche.back_book_social_network.book.dto.BookResponse;
+import com.fzamiche.back_book_social_network.book.mapper.BookMapper;
+import com.fzamiche.back_book_social_network.book.model.Book;
+import com.fzamiche.back_book_social_network.book.repository.BookRepository;
 import com.fzamiche.back_book_social_network.common.PageResponse;
 import com.fzamiche.back_book_social_network.exception.OperationNotPermittedException;
 import com.fzamiche.back_book_social_network.file.FileStorageService;
-import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
+import com.fzamiche.back_book_social_network.history.model.BookTransactinoHistory;
 import com.fzamiche.back_book_social_network.history.BookTransactionHostoryRepository;
-import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
+import com.fzamiche.back_book_social_network.history.dto.BookTransactionHistoryResponse;
 import com.fzamiche.back_book_social_network.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -21,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Objects;
 
-import static com.fzamiche.back_book_social_network.book.BookSpecification.withOwnerId;
+import static com.fzamiche.back_book_social_network.book.model.BookSpecification.withOwnerId;
 
 @Service
 @RequiredArgsConstructor

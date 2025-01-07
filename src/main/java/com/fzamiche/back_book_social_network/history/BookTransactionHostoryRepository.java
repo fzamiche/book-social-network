@@ -1,5 +1,6 @@
 package com.fzamiche.back_book_social_network.history;
 
+import com.fzamiche.back_book_social_network.history.model.BookTransactinoHistory;
 import com.fzamiche.back_book_social_network.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

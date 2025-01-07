@@ -1,8 +1,8 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.book.model;
 
 import com.fzamiche.back_book_social_network.common.BaseEntity;
 import com.fzamiche.back_book_social_network.feedBack.FeedBack;
-import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
+import com.fzamiche.back_book_social_network.history.model.BookTransactinoHistory;
 import com.fzamiche.back_book_social_network.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
