@@ -33,7 +33,7 @@ import static com.fzamiche.back_book_social_network.book.model.BookSpecification
 public class BookService {
 
     private final BookMapper bookMapper;
-    private final BookRepository bookRepositiry;
+    private final BookRepository bookRepository;
     private final BookTransactionHostoryRepository bookTransactionHostoryRepository;
     private final FileStorageService fileStorageService;
 
@@ -41,11 +41,11 @@ public class BookService {
         User user = (User) connectedUser.getPrincipal();
         Book book = bookMapper.toBook(request);
         book.setOwner(user);
-        return bookRepositiry.save(book).getId();
+        return bookRepository.save(book).getId();
     }
 
     public BookResponse findById(Integer bookId) {
-        return bookRepositiry.findById(bookId)
+        return bookRepository.findById(bookId)
                 .map(bookMapper::toBookResponse) // extract the bookResponse from the book
                 .orElseThrow(() -> new EntityNotFoundException("No Book found with ID :" + bookId));
     }
@@ -57,7 +57,7 @@ public class BookService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
 
         // récupérer les livres paginés, non archivé, partageable, excepté ceux de l'utilisateur connecté
-        Page<Book> books = bookRepositiry.findAllDisplayableBooks(pageable, user.getId());
+        Page<Book> books = bookRepository.findAllDisplayableBooks(pageable, user.getId());
 
         List<BookResponse> bookResponses = books.stream()
                 .map(bookMapper::toBookResponse)
@@ -77,7 +77,7 @@ public class BookService {
     public PageResponse<BookResponse> findAllBooksByOwner(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<Book> books = bookRepositiry.findAll(withOwnerId(user.getId()), pageable);
+        Page<Book> books = bookRepository.findAll(withOwnerId(user.getId()), pageable);
         List<BookResponse> bookResponses = books.stream()
                 .map(bookMapper::toBookResponse)
                 .toList();
@@ -129,31 +129,31 @@ public class BookService {
     }
 
     public Integer updateShareableStatusBook(Integer bookId, Authentication connectedUser) {
-        Book book = bookRepositiry.findById(bookId)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!Objects.equals(book.getOwner().getId(), user.getId())){
             throw new OperationNotPermittedException("Vous ne pouvez pas mettre à jour le statut shareable du Book : " + bookId);
         }
         book.setShareable(!book.isShareable());
-        bookRepositiry.save(book);
+        bookRepository.save(book);
         return bookId;
     }
 
     public Integer updateArchivedStatusBook(Integer bookId, Authentication connectedUser) {
-        Book book = bookRepositiry.findById(bookId)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!Objects.equals(book.getOwner().getId(), user.getId())){
             throw new OperationNotPermittedException("Vous ne pouvez pas mettre à jour le statut archived du Book : " + bookId);
         }
         book.setArchived(!book.isArchived());
-        bookRepositiry.save(book);
+        bookRepository.save(book);
         return bookId;
     }
 
     public Integer borrowBook(Integer bookId, Authentication connectedUser) {
-        Book book = bookRepositiry.findById(bookId)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
 
         // check si Book n'est pas archivé etpartageable
@@ -182,7 +182,7 @@ public class BookService {
     }
 
     public Integer returnBorrowedBook(Integer bookId, Authentication connectedUser) {
-        Book book = bookRepositiry.findById(bookId)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
 
         // check si Book n'est pas archivé etpartageable
@@ -204,7 +204,7 @@ public class BookService {
     }
 
     public Integer approuveReturnBorrowedBook(Integer bookId, Authentication connectedUser) {
-        Book book = bookRepositiry.findById(bookId)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
 
         // check si Book n'est pas archivé etpartageable
@@ -225,13 +225,13 @@ public class BookService {
     }
 
     public void uploadBookCoverPicture(MultipartFile file, Authentication connectedUser, Integer bookId) {
-        Book book = bookRepositiry.findById(bookId)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Le Book non trouvé avec l'ID : " + bookId));
         User user = (User) connectedUser.getPrincipal();
 
         var bookCover = fileStorageService.saveFile(file, user);
         book.setBookCover(bookCover);
-        bookRepositiry.save(book);
+        bookRepository.save(book);
     }
 }
 

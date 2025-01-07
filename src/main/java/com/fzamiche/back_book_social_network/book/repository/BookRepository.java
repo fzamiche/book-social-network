@@ -25,5 +25,5 @@ public interface BookRepository extends JpaRepository<Book, Integer>, JpaSpecifi
             FROM Book book
             WHERE book.owner.id = :userId
             """)
-    Page<Book> findAllDisplayableBooksByOwner(Pageable pageable, Integer id);
+    Page<Book> findAllDisplayableBooksByOwner(Pageable pageable, Integer userId);
 }
