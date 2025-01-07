@@ -1,6 +1,6 @@
-package com.fzamiche.back_book_social_network.history;
+package com.fzamiche.back_book_social_network.history.model;
 
-import com.fzamiche.back_book_social_network.book.Book;
+import com.fzamiche.back_book_social_network.book.model.Book;
 import com.fzamiche.back_book_social_network.common.BaseEntity;
 import com.fzamiche.back_book_social_network.user.User;
 import jakarta.persistence.Entity;

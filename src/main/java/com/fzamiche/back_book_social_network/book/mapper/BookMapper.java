@@ -1,7 +1,11 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.book.mapper;
 
-import com.fzamiche.back_book_social_network.history.BookTransactinoHistory;
-import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
+import com.fzamiche.back_book_social_network.book.model.Book;
+import com.fzamiche.back_book_social_network.book.dto.BookRequest;
+import com.fzamiche.back_book_social_network.book.dto.BookResponse;
+import com.fzamiche.back_book_social_network.file.FileUtils;
+import com.fzamiche.back_book_social_network.history.model.BookTransactinoHistory;
+import com.fzamiche.back_book_social_network.history.dto.BookTransactionHistoryResponse;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +32,7 @@ public class BookMapper {
                 .isbn(book.getIsbn())
                 .synopsis(book.getSynopsis())
                 .owner(book.getOwner().getFullName())
-                // todo - implémenter la récupération de l'image du livre
-                //.bookCover(book.getBookCover())
+                .bookCover(FileUtils.readFileFromLocation(book.getBookCover()))
                 .rate(book.getRate())
                 .archived(book.isArchived())
                 .shareable(book.isShareable())

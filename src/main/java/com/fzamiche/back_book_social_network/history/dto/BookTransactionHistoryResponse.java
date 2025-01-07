@@ -1,4 +1,4 @@
-package com.fzamiche.back_book_social_network.history;
+package com.fzamiche.back_book_social_network.history.dto;
 
 import lombok.*;
 

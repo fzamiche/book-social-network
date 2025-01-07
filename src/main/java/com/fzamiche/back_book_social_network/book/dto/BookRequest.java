@@ -1,4 +1,4 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.book.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

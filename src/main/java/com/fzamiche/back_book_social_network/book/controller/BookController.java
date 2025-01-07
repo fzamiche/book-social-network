@@ -1,13 +1,18 @@
-package com.fzamiche.back_book_social_network.book;
+package com.fzamiche.back_book_social_network.book.controller;
 
+import com.fzamiche.back_book_social_network.book.dto.BookRequest;
+import com.fzamiche.back_book_social_network.book.dto.BookResponse;
+import com.fzamiche.back_book_social_network.book.service.BookService;
 import com.fzamiche.back_book_social_network.common.PageResponse;
-import com.fzamiche.back_book_social_network.history.BookTransactionHistoryResponse;
+import com.fzamiche.back_book_social_network.history.dto.BookTransactionHistoryResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("books")
@@ -91,10 +96,45 @@ public class BookController {
 
     @PatchMapping("/archived/{book-id}")
     public ResponseEntity<Integer> updateArchivedStatusBook(
-           @PathVariable("book-id") Integer bookId,
-           Authentication connectedUser
-    ){
+            @PathVariable("book-id") Integer bookId,
+            Authentication connectedUser
+    ) {
         return ResponseEntity.ok(bookService.updateArchivedStatusBook(bookId, connectedUser));
+    }
+
+    @PostMapping("/borrow/{book-id}")
+    public ResponseEntity<Integer> borrowBook(
+            @PathVariable("book-id") Integer bookId,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.borrowBook(bookId, connectedUser));
+    }
+
+    @PostMapping("/borrow/return/{book-id}")
+    public ResponseEntity<Integer> returnBorrowedBook(
+            @PathVariable("book-id") Integer bookId,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.returnBorrowedBook(bookId, connectedUser));
+    }
+
+    @PostMapping("/borrow/approuve/{book-id}")
+    public ResponseEntity<Integer> approuveReturnBorrowedBook(
+            @PathVariable("book-id") Integer bookId,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.approuveReturnBorrowedBook(bookId, connectedUser));
+    }
+
+    @PostMapping(value = "/cover/{book-id}", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadBookCoverPicture(
+            @PathVariable("book-id") Integer bookId,
+            @Parameter()
+            @RequestPart("file") MultipartFile file,
+            Authentication connectedUser
+    ) {
+        bookService.uploadBookCoverPicture(file, connectedUser, bookId);
+        return ResponseEntity.accepted().build();
     }
 
 }
