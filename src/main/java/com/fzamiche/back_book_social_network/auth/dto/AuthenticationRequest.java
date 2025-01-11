@@ -15,11 +15,11 @@ public class AuthenticationRequest {
     private static final String INVALID_EMAIL_MESSAGE = "Email non valide.";
     private static final String PASSWORD_TOO_SHORT_MESSAGE = "Mot de passe trop court, minimum 8 caractères.";
 
-    @NotBlank(message = "Le champs firstname est requis")
+    @NotBlank(message = "Le champs email est requis")
     @Email(message = INVALID_EMAIL_MESSAGE)
     private String email;
 
-    @NotBlank(message = "Le password firstname est requis")
+    @NotBlank(message = "Le champs password est requis")
     @Size(min = 8, message = PASSWORD_TOO_SHORT_MESSAGE)
     private String password;
 }
