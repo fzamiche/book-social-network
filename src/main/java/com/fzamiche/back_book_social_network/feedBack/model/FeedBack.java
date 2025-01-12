@@ -1,4 +1,4 @@
-package com.fzamiche.back_book_social_network.feedBack;
+package com.fzamiche.back_book_social_network.feedBack.model;
 
 import com.fzamiche.back_book_social_network.book.model.Book;
 import com.fzamiche.back_book_social_network.common.BaseEntity;
