@@ -5,6 +5,7 @@ import com.fzamiche.back_book_social_network.auth.dto.AuthenticationResponse;
 import com.fzamiche.back_book_social_network.auth.dto.RegistrationRequest;
 import com.fzamiche.back_book_social_network.email.EmailService;
 import com.fzamiche.back_book_social_network.email.EmailTemplateName;
+import com.fzamiche.back_book_social_network.exception.OperationNotPermittedException;
 import com.fzamiche.back_book_social_network.role.Role;
 import com.fzamiche.back_book_social_network.role.RoleRepository;
 import com.fzamiche.back_book_social_network.security.JwtService;
@@ -48,7 +49,7 @@ public class AuthenticationService {
 
         var userRole = roleRepository.findByName("USER")
                 // todo - gérer les exceptions de manière plus propre
-                .orElseThrow(() -> new IllegalStateException("Role USER n'est pas initialisé."));
+                .orElseThrow(() -> new OperationNotPermittedException("Role USER n'est pas initialisé."));
 
         var user = createUser(request, userRole);
         userRepository.save(user);
@@ -133,13 +134,13 @@ public class AuthenticationService {
     public void activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
                 // todo - gérer les exceptions de manière plus propre
-                .orElseThrow(() -> new RuntimeException("Token non trouvé"));
+                .orElseThrow(() -> new OperationNotPermittedException("Token non trouvé"));
 
         // si le token est expiré, on envoie un nouveau code d'activation
         if(LocalDateTime.now().isAfter(savedToken.getExpriredAt())){
             sendValidationEmail(savedToken.getUser());
             // todo - gérer les exceptions de manière plus propre
-            throw new RuntimeException("Code d'activation de votre compte expiré, un autre code a été envoyé à votre adresse email." + savedToken.getUser().getEmail());
+            throw new OperationNotPermittedException("Code d'activation de votre compte expiré, un autre code a été envoyé à votre adresse email." + savedToken.getUser().getEmail());
         }
 
         // activer le compte, doubler la sécurité en vérifiant que l'utilisateur existe bien en base, on aurait du recupr le user depuis le savedToken.getUser()
