@@ -1,0 +1,40 @@
+@startuml
+actor Utilisateur
+participant AuthenticationController
+participant AuthenticationService
+participant TokenRepository
+participant UserRepository
+participant Token
+participant User
+
+Utilisateur -> AuthenticationController : GET /auth/activate-account (token)
+AuthenticationController -> AuthenticationService : activateAccount(token)
+
+== Recherche du token d'activation ==
+AuthenticationService -> TokenRepository : findByToken(token)
+TokenRepository --> AuthenticationService : Optional<Token> (savedToken)
+
+== Vérification de l'expiration du token ==
+AuthenticationService -> AuthenticationService : Vérifier expiration du token
+alt Token expiré
+    AuthenticationService -> AuthenticationService : envoie un nouveau mail avec nouveau code d'activation
+    AuthenticationService -> AuthenticationService : throw OperationNotPermittedException("Code d'activation expiré")
+else Token valide
+end
+
+== Recherche de l'utilisateur ==
+AuthenticationService -> UserRepository : findByEmail(savedToken.getUser().getEmail())
+UserRepository --> AuthenticationService : Optional<User> (user)
+
+== Activation du compte utilisateur ==
+AuthenticationService -> User : setEnabled(true)
+User -> UserRepository : save(user)
+UserRepository --> AuthenticationService : user (saved)
+
+== Mise à jour du token ==
+AuthenticationService -> Token : setValidatedAt(LocalDateTime.now())
+AuthenticationService -> TokenRepository : save(savedToken)
+TokenRepository --> AuthenticationService : token (saved)
+
+AuthenticationController --> Utilisateur : HTTP 200 OK
+@enduml
