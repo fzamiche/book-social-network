@@ -1,0 +1,41 @@
+@startuml
+actor Utilisateur
+participant AuthenticationService
+participant JwtService
+participant UserDetails
+participant Jwts
+participant Key
+participant Decoders
+participant Keys
+
+== Génération du token JWT ==
+AuthenticationService -> JwtService : generateToken(claims, user)
+JwtService -> JwtService : buildToken(claims, userDetails, jwtExpiration)
+
+== Construction du token JWT ==
+JwtService -> UserDetails : getAuthorities()
+UserDetails --> JwtService : List<GrantedAuthority>
+
+JwtService -> Jwts : builder()
+Jwts --> JwtService : Jwts.Builder
+
+JwtService -> Jwts : setClaims(extraClaims)
+JwtService -> Jwts : setSubject(userDetails.getUsername())
+JwtService -> Jwts : setIssuedAt(new Date(System.currentTimeMillis()))
+JwtService -> Jwts : setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+JwtService -> Jwts : claim("authorities", authorities)
+JwtService -> Jwts : signWith(getSignInKey())
+
+== Signature du token ==
+JwtService -> JwtService : getSignInKey()
+JwtService -> Decoders : BASE64.decode(secretKey)
+Decoders --> JwtService : byte[] keyBytes
+JwtService -> Keys : hmacShaKeyFor(keyBytes)
+Keys --> JwtService : Key
+
+JwtService -> Jwts : compact()
+Jwts --> JwtService : JWT token (signed)
+
+JwtService --> AuthenticationService : jwtToken
+AuthenticationService --> AuthenticationController : jwtToken
+@enduml
