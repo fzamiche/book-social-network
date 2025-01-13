@@ -48,7 +48,6 @@ public class AuthenticationService {
     public void register(RegistrationRequest request) throws MessagingException {
 
         var userRole = roleRepository.findByName("USER")
-                // todo - gérer les exceptions de manière plus propre
                 .orElseThrow(() -> new OperationNotPermittedException("Role USER n'est pas initialisé."));
 
         var user = createUser(request, userRole);
@@ -133,13 +132,11 @@ public class AuthenticationService {
     @Transactional //pour que la transaction soit commitée à la fin de la méthode, 1. Simplifie la gestion des transactions en automatique. 2. Garantit que plusieurs opérations de base de données soient exécutées ensemble (ou pas du tout en cas d'échec).
     public void activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
-                // todo - gérer les exceptions de manière plus propre
                 .orElseThrow(() -> new OperationNotPermittedException("Token non trouvé"));
 
         // si le token est expiré, on envoie un nouveau code d'activation
         if(LocalDateTime.now().isAfter(savedToken.getExpriredAt())){
             sendValidationEmail(savedToken.getUser());
-            // todo - gérer les exceptions de manière plus propre
             throw new OperationNotPermittedException("Code d'activation de votre compte expiré, un autre code a été envoyé à votre adresse email." + savedToken.getUser().getEmail());
         }
 
