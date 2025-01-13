@@ -1,0 +1,28 @@
+@startuml
+actor Utilisateur
+participant AuthenticationController
+participant AuthenticationService
+participant AuthenticationManager
+participant JwtService
+
+Utilisateur -> AuthenticationController : POST /auth/authenticate (AuthenticationRequest)
+AuthenticationController -> AuthenticationService : authenticate(request)
+
+== Authentification de l'utilisateur ==
+AuthenticationService -> AuthenticationManager : authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()))
+AuthenticationManager --> AuthenticationService : Authentication object (auth)
+
+== Récupération des informations de l'utilisateur ==
+AuthenticationService -> AuthenticationService : var user = (User) auth.getPrincipal()
+
+== Génération du token JWT ==
+AuthenticationService -> JwtService : generateToken(claims, user)
+JwtService -> JwtService : buildToken(claims, userDetails, jwtExpiration)
+JwtService --> AuthenticationService : jwtToken
+
+== Construction et réponse de l'objet AuthenticationResponse ==
+AuthenticationService -> AuthenticationService : AuthenticationResponse.builder().jwtToken(jwtToken).build()
+
+AuthenticationService --> AuthenticationController : AuthenticationResponse (jwtToken)
+AuthenticationController --> Utilisateur : HTTP 200 OK (jwtToken)
+@enduml
