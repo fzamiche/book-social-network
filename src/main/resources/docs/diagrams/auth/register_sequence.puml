@@ -1,0 +1,46 @@
+@startuml
+actor Utilisateur
+participant AuthenticationController
+participant AuthenticationService
+participant RoleRepository
+participant UserRepository
+participant TokenRepository
+participant EmailService
+participant JavaMailSender
+
+Utilisateur -> AuthenticationController : POST /auth/register (RegistrationRequest)
+AuthenticationController -> AuthenticationService : register(request)
+
+== Récupération du rôle ==
+AuthenticationService -> RoleRepository : findByName("USER")
+RoleRepository --> AuthenticationService : Optional<Role>
+
+== Création de l'utilisateur ==
+group Création et encodage de l'utilisateur
+    AuthenticationService -> AuthenticationService : createUser(request, userRole)
+    AuthenticationService -> AuthenticationService : passwordEncoder.encode(request.getPassword())
+    AuthenticationService -> AuthenticationService : User.builder()...build()
+end
+
+AuthenticationService -> UserRepository : save(user)
+UserRepository --> AuthenticationService : user (saved)
+
+== Envoi de mail de validation ==
+group Envoi de mail de validation
+group Génération et sauvegarde du token d'activation
+    AuthenticationService -> AuthenticationService : generateAndSaveActivationToken(user)
+    AuthenticationService -> AuthenticationService : generateActivationToken(6)
+    AuthenticationService -> AuthenticationService : createToken(user, generatedToken)
+
+AuthenticationService -> TokenRepository : save(token)
+TokenRepository --> AuthenticationService : token (saved)
+end
+group Envoi de l'email via javaMailSender
+    AuthenticationService -> EmailService : sendValidationEmail(user)
+    EmailService -> JavaMailSender : sendEmail(to, username, emailTemplate, confirmationUrl, activationCode, subject)
+    JavaMailSender --> EmailService : Email Sent
+    EmailService --> AuthenticationService : Email Sent
+end
+end
+AuthenticationController --> Utilisateur : HTTP 202 Accepted
+@enduml
